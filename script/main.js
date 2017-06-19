@@ -27,15 +27,15 @@ var main = {
 		this.canvas.addEventListener('mousedown', function (e) { Input.Mouse.OnMouseDown(e); }, false);
 		this.canvas.addEventListener('mouseup', function (e) { Input.Mouse.OnMouseUp(e); }, false);
 
-		main.run();
+		game.Initialize();
 
 	},
-	run: function () {
-		if (main.isRunning) {
-			GameTime.Update();
-			main.game.Update();
-			main.game.Draw();
-		}
-		requestAnimationFrame(main.run);
+	GameStates: {
+		INTRO: 0,
+		MAIN_MENU: 1,
+		PLAYING: 2,
+		GAME_MENU: 3,
+		DEAD: 4,
+		OUTRO: 5
 	}
 };
