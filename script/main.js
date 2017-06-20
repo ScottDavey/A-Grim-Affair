@@ -14,6 +14,7 @@ var main = {
 		this.canvas.height = this.CANVAS_HEIGHT;
 		this.context = this.canvas.getContext('2d');
 		this.hasGamePad = false;
+		this.GamePad = undefined;
 
 		// Adjust webpage styles
 		wrapper = document.getElementById('wrapper');
@@ -30,7 +31,7 @@ var main = {
 		// window.addEventListener('gamepadconnected', function (e) { console.log('CONNECTED'); }, false);	//  Input.GamePad.init();
 		// window.addEventListener('gamepaddisconnected', function (e) { Input.GamePad.deinit(); }, false);
 
-		Input.GamePad.init();
+		// Input.GamePad.init();
 		this.game = new Game();
 		this.game.Initialize();
 		main.run();

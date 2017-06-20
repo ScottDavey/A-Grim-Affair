@@ -22,7 +22,7 @@ Game.prototype.Update = function () {
 
 	GameTime.Update();
 	this.fps = fps.getFPS();
-	Input.GamePad.Update();
+	//Input.GamePad.Update();
 
 	/*
 	**

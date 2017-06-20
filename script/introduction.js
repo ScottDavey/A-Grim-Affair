@@ -20,7 +20,7 @@ function Introduction () {
 		duration: 5
 	};
 	this.line3 = {
-		text: 'PRESS A TO CONTINUE',
+		text: 'PRESS SPACE TO CONTINUE',
 		opacity: 1,
 		fontSize: 24,
 		duration: 5
@@ -58,7 +58,7 @@ Introduction.prototype.Update = function () {
 			break;
 		case 2:
 			
-			if (Input.GamePad.A.pressed) {
+			if (Input.Keys.GetKey(Input.Keys.SPACE)/* || Input.GamePad.A.pressed*/) {
 				main.game.secondaryState.push(main.GameStates.SECONDARY.TRANSITION);
 				this.state++;	// This is just to prevent further button clicks
 			}
@@ -79,7 +79,7 @@ Introduction.prototype.Draw = function () {
 			DrawText(this.line2.text, (main.CANVAS_WIDTH / 2) - 250, (main.CANVAS_HEIGHT / 2 - 10), 'normal ' + this.line2.fontSize + 'pt Verdana', 'rgba(255, 255, 255, ' + this.line2.opacity + ')');
 			break;
 		case 2:
-			DrawText(this.line3.text, (main.CANVAS_WIDTH / 2) - 200, 700, 'normal ' + this.line3.fontSize + 'pt Verdana', 'rgba(255, 255, 255, ' + this.line3.opacity + ')');
+			DrawText(this.line3.text, (main.CANVAS_WIDTH / 2) - 225, 700, 'normal ' + this.line3.fontSize + 'pt Verdana', 'rgba(255, 255, 255, ' + this.line3.opacity + ')');
 			break;
 	}
 };
