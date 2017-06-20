@@ -54,5 +54,35 @@ var Input = {
 				Input.Mouse.OnMouseMove.pos.y = e.offsetY;
 			}
 		}
+	},
+	GamePad: {
+		init: function () {
+			main.GamePad = navigator.getGamepads()[0];
+			main.hasGamePad = true;
+		},
+		deinit: function () {
+			main.GamePad = {};
+			main.hasGamePad = false;
+		},
+		Update: function () {
+			main.GamePad = navigator.getGamepads()[0];
+			// Refresh GamePad Buttons
+			Input.GamePad.A = main.GamePad.buttons[0];
+			Input.GamePad.B = main.GamePad.buttons[1];
+			Input.GamePad.X = main.GamePad.buttons[2];
+			Input.GamePad.Y = main.GamePad.buttons[3];
+			Input.GamePad.UP = main.GamePad.buttons[12];
+			Input.GamePad.DOWN = main.GamePad.buttons[13];
+			Input.GamePad.LEFT = main.GamePad.buttons[14];
+			Input.GamePad.RIGHT = main.GamePad.buttons[15];
+		},
+		A: {},
+		B: {},
+		X: {},
+		Y: {},
+		UP: {},
+		DOWN: {},
+		LEFT: {},
+		RIGHT: {}
 	}
 };

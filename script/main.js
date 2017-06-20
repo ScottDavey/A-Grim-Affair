@@ -13,7 +13,7 @@ var main = {
 		this.canvas.width = this.CANVAS_WIDTH;
 		this.canvas.height = this.CANVAS_HEIGHT;
 		this.context = this.canvas.getContext('2d');
-		this.game = new Game();
+		this.hasGamePad = false;
 
 		// Adjust webpage styles
 		wrapper = document.getElementById('wrapper');
@@ -27,15 +27,34 @@ var main = {
 		this.canvas.addEventListener('mousedown', function (e) { Input.Mouse.OnMouseDown(e); }, false);
 		this.canvas.addEventListener('mouseup', function (e) { Input.Mouse.OnMouseUp(e); }, false);
 
-		game.Initialize();
+		// window.addEventListener('gamepadconnected', function (e) { console.log('CONNECTED'); }, false);	//  Input.GamePad.init();
+		// window.addEventListener('gamepaddisconnected', function (e) { Input.GamePad.deinit(); }, false);
+
+		Input.GamePad.init();
+		this.game = new Game();
+		this.game.Initialize();
+		main.run();
 
 	},
 	GameStates: {
-		INTRO: 0,
-		MAIN_MENU: 1,
-		PLAYING: 2,
-		GAME_MENU: 3,
-		DEAD: 4,
-		OUTRO: 5
+		PRIMARY: {
+			INTRO: 0,
+			MAIN_MENU: 1,
+			PLAYING: 2,
+			OUTRO: 3,
+			LOADING: 4
+		},
+		SECONDARY: {
+			GAME_MENU: 0,
+			OPTIONS_MENU: 1,
+			TRANSITION: 2
+		}
+	},
+	run: function () {
+		if (main.isRunning) {
+			main.game.Update();
+			main.game.Draw();
+		}
+		requestAnimationFrame(main.run);
 	}
 };

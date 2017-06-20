@@ -30,13 +30,13 @@ Player.prototype.SetPos = function (pos) {
 Player.prototype.GetInput = function () {
 
 	// Horizontal Movement
-	if (Input.Keys.GetKey(Input.Keys.A) || Input.Keys.GetKey(Input.Keys.LEFT)) {
+	if (Input.Keys.GetKey(Input.Keys.A) || Input.Keys.GetKey(Input.Keys.LEFT) || Input.GamePad.LEFT.pressed) {
 		this.movement = -1.0;
-	} else if (Input.Keys.GetKey(Input.Keys.D) || Input.Keys.GetKey(Input.Keys.RIGHT)) {
+	} else if (Input.Keys.GetKey(Input.Keys.D) || Input.Keys.GetKey(Input.Keys.RIGHT) || Input.GamePad.RIGHT.pressed) {
 		this.movement = 1.0;
 	}
 
-	if (Input.Keys.GetKey(Input.Keys.SPACE) && this.isOnGround && !this.jumpLock) {
+	if ((Input.Keys.GetKey(Input.Keys.SPACE) || Input.GamePad.A.pressed) && this.isOnGround && !this.jumpLock) {
 		this.isOnGround = false;
 		this.velocity.y -= 50000;
 		this.jumpLock = true;
