@@ -4,82 +4,53 @@
 **************************************************/
 
 function Introduction () {
-	this.BG = new Texture(new Vector2(0, 0), new Vector2(main.CANVAS_WIDTH, main.CANVAS_HEIGHT), '#333333', 1, '#333333');
+	this.fade = new Texture(new Vector2(0, 0), new Vector2(main.CANVAS_WIDTH, main.CANVAS_HEIGHT), 'rgba(0, 0, 0, 1)', 1, 'rgba(0, 0, 0, 1)');
+	this.fadeOpacity = 1;
+	this.BG = new Sprite('images/Intro-Background.png', new Vector2(0, 0), new Vector2(main.CANVAS_WIDTH, main.CANVAS_HEIGHT));
+	this.duration = 10;
 	this.state = 0;
-	this.previousTime = GameTime.GetCurrentGameTime();
-	this.line1 = {
-		text: 'A GAME BY SCOTT DAVEY',
-		opacity: 0,
-		fontSize: 36,
-		duration: 5
-	};
-	this.line2 = {
-		text: 'INTRUDERS',
-		opacity: 0,
-		fontSize: 66,
-		duration: 5
-	};
-	this.line3 = {
-		text: 'PRESS SPACE TO CONTINUE',
-		opacity: 1,
-		fontSize: 24,
-		duration: 5
-	};
+	this.startTime = GameTime.GetCurrentGameTime();
+	this.done = false;
 }
 
+Introduction.prototype.GetDone = function () {
+	return this.done;
+};
+
 Introduction.prototype.Update = function () {
-	var currentTime, previousTime, o, t;
+	var currentTime, elapsedTime, o, t;
 	currentTime = GameTime.GetCurrentGameTime();
+	elapsedTime = (currentTime - this.startTime);
+
+	if (elapsedTime >= 5) {
+		this.state = 1;
+	} else {
+		this.state = 0;
+	}
 
 	switch (this.state) {
+		// Fade In
 		case 0:
-
-			if (currentTime - this.previousTime >= 0.1) {
-				this.line1.opacity += 0.03;
-				this.previousTime = currentTime;
-				if (this.line1.opacity >= 1) {
-					this.state++;
-					this.line1.opacity = 0;
-				}
-			}
-
+			this.fadeOpacity -= 0.005;
+			this.fadeOpacity = (this.fadeOpacity < 0) ? 0 : this.fadeOpacity;
 			break;
+		// Fade Out
 		case 1:
-
-			if (currentTime - this.previousTime >= 0.1) {
-				this.line2.opacity += 0.03;
-				this.previousTime = currentTime;
-				if (this.line2.opacity >= 1) {
-					this.state++;
-					this.line2.opacity = 0;
-				}
-			}
-
-			break;
-		case 2:
-			
-			if (Input.Keys.GetKey(Input.Keys.SPACE)/* || Input.GamePad.A.pressed*/) {
-				main.game.secondaryState.push(main.GameStates.SECONDARY.TRANSITION);
-				this.state++;	// This is just to prevent further button clicks
-			}
-
+			this.fadeOpacity += 0.005;
+			this.fadeOpacity = (this.fadeOpacity > 1) ? 1 : this.fadeOpacity;
 			break;
 	}
 
+	// Apply opacity change
+	this.fade.SetColor('rgba(0, 0, 0, ' + this.fadeOpacity + ')');
+
+	// If we've hit our duration, scene is over. Move on to the intro
+	if (!this.done && elapsedTime >= this.duration) {
+		this.done = true;
+	}
 };
 
 Introduction.prototype.Draw = function () {
 	this.BG.Draw();
-
-	switch (this.state) {
-		case 0:
-			DrawText(this.line1.text, (main.CANVAS_WIDTH / 2) - 300, (main.CANVAS_HEIGHT / 2 - 20), 'normal ' + this.line1.fontSize + 'pt Verdana', 'rgba(255, 255, 255, ' + this.line1.opacity + ')');
-			break;
-		case 1:
-			DrawText(this.line2.text, (main.CANVAS_WIDTH / 2) - 250, (main.CANVAS_HEIGHT / 2 - 10), 'normal ' + this.line2.fontSize + 'pt Verdana', 'rgba(255, 255, 255, ' + this.line2.opacity + ')');
-			break;
-		case 2:
-			DrawText(this.line3.text, (main.CANVAS_WIDTH / 2) - 225, 700, 'normal ' + this.line3.fontSize + 'pt Verdana', 'rgba(255, 255, 255, ' + this.line3.opacity + ')');
-			break;
-	}
+	this.fade.Draw();
 };

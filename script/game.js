@@ -6,9 +6,9 @@
 function Game () {
 	this.fps = 0;
 	this.primaryState = undefined;
-	this.secondaryState = [];
+	//this.secondaryState = [];
 	this.intro = undefined;
-	this.transition = undefined;
+	this.mainMenu = undefined;
 
 }
 
@@ -37,8 +37,17 @@ Game.prototype.Update = function () {
 	switch (this.primaryState) {
 		case main.GameStates.PRIMARY.INTRO:
 			this.intro.Update();
+			// When the intro is finished, switch to main menu
+			if (this.intro.GetDone()) {
+				this.primaryState = main.GameStates.PRIMARY.MAIN_MENU;
+			}
 			break;
 		case main.GameStates.PRIMARY.MAIN_MENU:
+			if (typeof this.mainMenu === 'undefined') this.mainMenu = new MainMenu();
+			this.mainMenu.Update();
+			if (this.mainMenu.GetPlay()) {
+				this.primaryState = main.GameStates.PRIMARY.PLAYING;
+			}
 			break;
 		case main.GameStates.PRIMARY.PLAYING:
 			break;
@@ -46,6 +55,7 @@ Game.prototype.Update = function () {
 			break;
 	}
 
+	/****	REMOVING for the sake of keeping things simple
 	// Update Secondary State second
 	if (this.secondaryState.length > 0) {
 		for (s = this.secondaryState.length; s >= 0; s--) {
@@ -53,12 +63,12 @@ Game.prototype.Update = function () {
 				case main.GameStates.SECONDARY.GAME_MENU:
 					break;
 				case main.GameStates.SECONDARY.TRANSITION:
-					if (typeof this.transition === 'undefined') this.transition = new Transition();
 					this.transition.Update();
 					break;
 			}
 		}
 	}
+	*****/
 
 };
 
@@ -74,6 +84,7 @@ Game.prototype.Draw = function () {
 			DrawText('Primary State: INTRO', 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 			break;
 		case main.GameStates.PRIMARY.MAIN_MENU:
+			if (typeof this.mainMenu !== 'undefined') this.mainMenu.Draw();
 			DrawText('Primary State: MAIN_MENU', 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 			break;
 		case main.GameStates.PRIMARY.PLAYING:
@@ -84,6 +95,7 @@ Game.prototype.Draw = function () {
 			break;
 	}
 
+	/****	REMOVING for the sake of keeping things simple
 	// Update Secondary State second
 	if (this.secondaryState.length > 0) {
 		for (s = this.secondaryState.length; s >= 0; s--) {
@@ -98,6 +110,7 @@ Game.prototype.Draw = function () {
 			}
 		}
 	}
+	****/
 
 	// FPS
 	DrawText('FPS: ' + this.fps, (main.CANVAS_WIDTH / 2 - 50), 20, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
