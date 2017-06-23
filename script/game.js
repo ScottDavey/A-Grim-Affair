@@ -9,11 +9,13 @@ function Game () {
 	//this.secondaryState = [];
 	this.intro = undefined;
 	this.mainMenu = undefined;
+	this.level = undefined;
 
 }
 
 Game.prototype.Initialize = function () {
 	this.primaryState = main.GameStates.PRIMARY.INTRO;
+	// this.primaryState = main.GameStates.PRIMARY.MAIN_MENU;
 	this.intro = new Introduction();
 };
 
@@ -22,7 +24,7 @@ Game.prototype.Update = function () {
 
 	GameTime.Update();
 	this.fps = fps.getFPS();
-	//Input.GamePad.Update();
+	Input.GamePad.Update();
 
 	/*
 	**
@@ -50,6 +52,8 @@ Game.prototype.Update = function () {
 			}
 			break;
 		case main.GameStates.PRIMARY.PLAYING:
+			if (typeof this.level === 'undefined') this.level = new Level();
+			this.level.Update();
 			break;
 		case main.GameStates.PRIMARY.OUTRO:
 			break;
@@ -80,7 +84,7 @@ Game.prototype.Draw = function () {
 	// Update Primary State first
 	switch (this.primaryState) {
 		case main.GameStates.PRIMARY.INTRO:
-			this.intro.Draw();
+			if (typeof this.intro !== 'undefined') this.intro.Draw();
 			DrawText('Primary State: INTRO', 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 			break;
 		case main.GameStates.PRIMARY.MAIN_MENU:
@@ -88,6 +92,7 @@ Game.prototype.Draw = function () {
 			DrawText('Primary State: MAIN_MENU', 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 			break;
 		case main.GameStates.PRIMARY.PLAYING:
+			if (typeof this.level !== 'undefined') this.level.Draw();
 			DrawText('Primary State: PLAYING', 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 			break;
 		case main.GameStates.PRIMARY.OUTRO:

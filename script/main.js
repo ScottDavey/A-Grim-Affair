@@ -31,7 +31,7 @@ var main = {
 		// window.addEventListener('gamepadconnected', function (e) { console.log('CONNECTED'); }, false);	//  Input.GamePad.init();
 		// window.addEventListener('gamepaddisconnected', function (e) { Input.GamePad.deinit(); }, false);
 
-		// Input.GamePad.init();
+		Input.GamePad.init();
 		this.game = new Game();
 		this.game.Initialize();
 		main.run();

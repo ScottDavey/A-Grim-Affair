@@ -54,7 +54,7 @@ var Input = {
 				Input.Mouse.OnMouseMove.pos.y = e.offsetY;
 			}
 		}
-	}/*,
+	},
 	GamePad: {
 		init: function () {
 			main.GamePad = navigator.getGamepads()[0];
@@ -86,5 +86,5 @@ var Input = {
 		DOWN: {},
 		LEFT: {},
 		RIGHT: {}
-	}*/
+	}
 };
