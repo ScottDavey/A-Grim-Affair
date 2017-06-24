@@ -4,71 +4,63 @@
 ***********************************/
 
 function Level () {
-	this.WORLD_WIDTH = main.CANVAS_WIDTH;
-	this.WORLD_HEIGHT = main.CANVAS_HEIGHT;
+	this.WORLD_WIDTH = main.CANVAS_WIDTH * 2;
+	this.WORLD_HEIGHT = main.CANVAS_HEIGHT * 2;
 	this.player = new Player(this);
 	this.camera = new Camera();
 
 	this.lines = [];
 	this.LoadLines();
 
-	this.BG = new Texture(new Vector2(0, 0), new Vector2(main.CANVAS_WIDTH, main.CANVAS_HEIGHT), '#111111', 1, '#111111');
+	this.BG = new Texture(new Vector2(0, 0), new Vector2(main.CANVAS_WIDTH, main.CANVAS_HEIGHT), '#000000', 1, '#000000');
 }
 
 Level.prototype.LoadLines = function () {
 	
-	this.lines.push(new Line(new Vector2(1, 2), new Vector2(1, 715), "#02AA30", "WALL", 1, "undefined"));
-	this.lines.push(new Line(new Vector2(1276, 3), new Vector2(1276, 716), "#02AA30", "WALL", -1, "undefined"));
-	this.lines.push(new Line(new Vector2(1, 714), new Vector2(172, 703), "#9F0313", "FLOOR", -1, "undefined"));
-	this.lines.push(new Line(new Vector2(172, 703), new Vector2(316, 708), "#9F0313", "FLOOR", -1, "undefined"));
-	this.lines.push(new Line(new Vector2(316, 708), new Vector2(421, 704), "#9F0313", "FLOOR", -1, "undefined"));
-	this.lines.push(new Line(new Vector2(421, 704), new Vector2(688, 700), "#9F0313", "FLOOR", -1, "undefined"));
-	this.lines.push(new Line(new Vector2(688, 700), new Vector2(1045, 704), "#9F0313", "FLOOR", -1, "undefined"));
-	this.lines.push(new Line(new Vector2(1045, 704), new Vector2(1277, 715), "#9F0313", "FLOOR", -1, "undefined"));
-	this.lines.push(new Line(new Vector2(3, 327), new Vector2(39, 323), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(39, 323), new Vector2(77, 322), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(77, 322), new Vector2(131, 326), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(131, 326), new Vector2(166, 328), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(166, 328), new Vector2(186, 336), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(186, 336), new Vector2(216, 335), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(216, 335), new Vector2(253, 338), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(253, 338), new Vector2(278, 349), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(278, 349), new Vector2(306, 353), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(305, 354), new Vector2(305, 549), "#02AA30", "WALL", 1, "NONE"));
-	this.lines.push(new Line(new Vector2(305, 549), new Vector2(334, 559), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(334, 559), new Vector2(472, 583), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(472, 583), new Vector2(559, 587), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(559, 587), new Vector2(621, 559), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(621, 559), new Vector2(664, 573), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(664, 573), new Vector2(695, 560), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(695, 560), new Vector2(732, 586), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(732, 586), new Vector2(790, 588), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(790, 588), new Vector2(920, 578), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(920, 578), new Vector2(1006, 533), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(1006, 358), new Vector2(1006, 533), "#02AA30", "WALL", -1, "NONE"));
-	this.lines.push(new Line(new Vector2(813, 368), new Vector2(1006, 358), "#0E72D5", "CEILING", 1, "NONE"));
-	this.lines.push(new Line(new Vector2(813, 368), new Vector2(813, 473), "#02AA30", "WALL", 1, "NONE"));
-	this.lines.push(new Line(new Vector2(523, 469), new Vector2(813, 473), "#0E72D5", "CEILING", 1, "NONE"));
-	this.lines.push(new Line(new Vector2(523, 341), new Vector2(523, 469), "#02AA30", "WALL", -1, "NONE"));
-	this.lines.push(new Line(new Vector2(523, 341), new Vector2(560, 323), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(560, 323), new Vector2(650, 322), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(650, 322), new Vector2(724, 313), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(724, 313), new Vector2(762, 321), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(762, 321), new Vector2(819, 327), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(819, 327), new Vector2(897, 281), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(897, 281), new Vector2(944, 262), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(944, 262), new Vector2(1009, 251), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(1009, 157), new Vector2(1009, 251), "#02AA30", "WALL", -1, "NONE"));
-	this.lines.push(new Line(new Vector2(1009, 157), new Vector2(1054, 138), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(1054, 138), new Vector2(1114, 132), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(1114, 132), new Vector2(1114, 169), "#02AA30", "WALL", 1, "NONE"));
-	this.lines.push(new Line(new Vector2(1114, 169), new Vector2(1167, 163), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(1167, 163), new Vector2(1234, 179), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(1234, 179), new Vector2(1277, 172), "#9F0313", "FLOOR", -1, "GRASS"));
-	this.lines.push(new Line(new Vector2(1008, 49), new Vector2(1112, 63), "#0E72D5", "CEILING", 1, "NONE"));
-	this.lines.push(new Line(new Vector2(1008, -1), new Vector2(1008, 49), "#02AA30", "WALL", -1, "NONE"));
-	this.lines.push(new Line(new Vector2(1112, 0), new Vector2(1112, 62), "#02AA30", "WALL", 1, "NONE"));
-
+	// First 1/2 of screen
+	this.lines.push(new Line(new Vector2(0, 259), new Vector2(204, 255), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(204, 255), new Vector2(482, 457), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(482, 457), new Vector2(737, 465), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(737, 465), new Vector2(809, 444), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(809, 444), new Vector2(1073, 445), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(1073, 445), new Vector2(1279, 487), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(365, 175), new Vector2(625, 175), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(809, 119), new Vector2(1077, 122), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(1076, 288), new Vector2(1260, 290), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(624, 174), new Vector2(624, 222), "#02AA30", "WALL", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(1077, 122), new Vector2(1077, 162), "#02AA30", "WALL", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(1259, 289), new Vector2(1259, 335), "#02AA30", "WALL", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(366, 175), new Vector2(366, 218), "#02AA30", "WALL", -1, "NONE"));
+	this.lines.push(new Line(new Vector2(809, 119), new Vector2(809, 155), "#02AA30", "WALL", -1, "NONE"));
+	this.lines.push(new Line(new Vector2(1077, 288), new Vector2(1077, 326), "#02AA30", "WALL", -1, "NONE"));
+	this.lines.push(new Line(new Vector2(366, 217), new Vector2(623, 221), "#0E72D5", "CEILING", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(809, 154), new Vector2(1077, 161), "#0E72D5", "CEILING", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(1076, 324), new Vector2(1260, 334), "#0E72D5", "CEILING", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(0, 2), new Vector2(0, 260), "#02AA30", "WALL", 1, "NONE"));
+	// Second 1/2 of screen
+	this.lines.push(new Line(new Vector2(1280, (1767 - 1280)), new Vector2(1596, (1783 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(1596, (1783 - 1280)), new Vector2(2039, (1875 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(2039, (1875 - 1280)), new Vector2(2314, (1837 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(2314, (1837 - 1280)), new Vector2(2505, (1743 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(2505, (1743 - 1280)), new Vector2(2558, (1741 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(2558, (1282 - 1280)), new Vector2(2558, (1741 - 1280)), "#02AA30", "WALL", -1, "NONE"));
+	this.lines.push(new Line(new Vector2(1341, (1657 - 1280)), new Vector2(1708, (1657 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(1708, (1657 - 1280)), new Vector2(1773, (1629 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(1773, (1629 - 1280)), new Vector2(1916, (1625 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(1916, (1625 - 1280)), new Vector2(2009, (1575 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(2009, (1575 - 1280)), new Vector2(2170, (1570 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(2170, (1570 - 1280)), new Vector2(2381, (1480 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(2381, (1480 - 1280)), new Vector2(2481, (1479 - 1280)), "#9F0313", "FLOOR", -1, "GRASS"));
+	this.lines.push(new Line(new Vector2(2481, (1479 - 1280)), new Vector2(2481, (1661 - 1280)), "#02AA30", "WALL", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(1342, (1657 - 1280)), new Vector2(1342, (1688 - 1280)), "#02AA30", "WALL", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(1342, (1688 - 1280)), new Vector2(1707, (1671 - 1280)), "#0E72D5", "CEILING", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(1707, (1671 - 1280)), new Vector2(1774, (1640 - 1280)), "#0E72D5", "CEILING", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(1774, (1640 - 1280)), new Vector2(1920, (1638 - 1280)), "#0E72D5", "CEILING", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(1920, (1638 - 1280)), new Vector2(2024, (1586 - 1280)), "#0E72D5", "CEILING", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(2024, (1586 - 1280)), new Vector2(2229, (1581 - 1280)), "#0E72D5", "CEILING", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(2229, (1581 - 1280)), new Vector2(2458, (1490 - 1280)), "#0E72D5", "CEILING", 1, "NONE"));
+	this.lines.push(new Line(new Vector2(2458, (1490 - 1280)), new Vector2(2458, (1661 - 1280)), "#02AA30", "WALL", -1, "NONE"));
+	this.lines.push(new Line(new Vector2(2458, (1661 - 1280)), new Vector2(2481, (1661 - 1280)), "#0E72D5", "CEILING", 1, "NONE"));
 
 };
 

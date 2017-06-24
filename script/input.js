@@ -58,16 +58,22 @@ var Input = {
 	GamePad: {
 		init: function () {
 			main.GamePad = navigator.getGamepads()[0];
-			main.hasGamePad = true;
+			console.log(main.GamePad);
+			if (main.GamePad !== null) {
+				main.hasGamePad = true;
+				console.log('Game Pad is connected');
+			}
 		},
 		deinit: function () {
-			main.GamePad = {};
+			main.GamePad = null;
 			main.hasGamePad = false;
+			console.log('Game Pad has disconnected');
 		},
 		Update: function () {
-			main.GamePad = navigator.getGamepads()[0];
-			// Refresh GamePad Buttons
-			if (typeof main.GamePad !== 'undefined') {
+			if (main.hasGamePad) {
+				main.GamePad = navigator.getGamepads()[0];
+				
+				// Refresh GamePad Buttons
 				Input.GamePad.A = main.GamePad.buttons[0];
 				Input.GamePad.B = main.GamePad.buttons[1];
 				Input.GamePad.X = main.GamePad.buttons[2];

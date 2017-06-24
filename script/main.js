@@ -28,10 +28,9 @@ var main = {
 		this.canvas.addEventListener('mousedown', function (e) { Input.Mouse.OnMouseDown(e); }, false);
 		this.canvas.addEventListener('mouseup', function (e) { Input.Mouse.OnMouseUp(e); }, false);
 
-		// window.addEventListener('gamepadconnected', function (e) { console.log('CONNECTED'); }, false);	//  Input.GamePad.init();
-		// window.addEventListener('gamepaddisconnected', function (e) { Input.GamePad.deinit(); }, false);
+		window.addEventListener('gamepadconnected', function (e) { Input.GamePad.init(); }, false);	//  Input.GamePad.init();
+		window.addEventListener('gamepaddisconnected', function (e) { Input.GamePad.deinit(); }, false);
 
-		Input.GamePad.init();
 		this.game = new Game();
 		this.game.Initialize();
 		main.run();

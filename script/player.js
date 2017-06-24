@@ -3,14 +3,14 @@
 *******************************************/
 function Player (level) {
 	this.level = level;
-	this.pos = new Vector2(20, 300);
+	this.pos = new Vector2(20, 100);
 	this.size = new Vector2(25, 50);
 	this.velocity = new Vector2(0, 0);
 
 	this.movement = 0;
 	this.friction = 0.75;
-	this.moveAcceleration = 7000.0;
-	this.maxMoveSpeed = 600.0;
+	this.moveAcceleration = 3000.0;
+	this.maxMoveSpeed = 300.0;
 	this.gravity = 3000.0;
 	this.maxFallSpeed = 1000.0;
 

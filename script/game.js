@@ -24,7 +24,7 @@ Game.prototype.Update = function () {
 
 	GameTime.Update();
 	this.fps = fps.getFPS();
-	Input.GamePad.Update();
+	if (main.hasGamePad) Input.GamePad.Update();
 
 	/*
 	**
@@ -35,44 +35,48 @@ Game.prototype.Update = function () {
 	**
 	*/
 
-	// Update Primary State first
-	switch (this.primaryState) {
-		case main.GameStates.PRIMARY.INTRO:
-			this.intro.Update();
-			// When the intro is finished, switch to main menu
-			if (this.intro.GetDone()) {
-				this.primaryState = main.GameStates.PRIMARY.MAIN_MENU;
-			}
-			break;
-		case main.GameStates.PRIMARY.MAIN_MENU:
-			if (typeof this.mainMenu === 'undefined') this.mainMenu = new MainMenu();
-			this.mainMenu.Update();
-			if (this.mainMenu.GetPlay()) {
-				this.primaryState = main.GameStates.PRIMARY.PLAYING;
-			}
-			break;
-		case main.GameStates.PRIMARY.PLAYING:
-			if (typeof this.level === 'undefined') this.level = new Level();
-			this.level.Update();
-			break;
-		case main.GameStates.PRIMARY.OUTRO:
-			break;
-	}
+	if (this.fps > 30) {
 
-	/****	REMOVING for the sake of keeping things simple
-	// Update Secondary State second
-	if (this.secondaryState.length > 0) {
-		for (s = this.secondaryState.length; s >= 0; s--) {
-			switch (this.secondaryState[s]) {
-				case main.GameStates.SECONDARY.GAME_MENU:
-					break;
-				case main.GameStates.SECONDARY.TRANSITION:
-					this.transition.Update();
-					break;
+		// Update Primary State first
+		switch (this.primaryState) {
+			case main.GameStates.PRIMARY.INTRO:
+				this.intro.Update();
+				// When the intro is finished, switch to main menu
+				if (this.intro.GetDone()) {
+					this.primaryState = main.GameStates.PRIMARY.MAIN_MENU;
+				}
+				break;
+			case main.GameStates.PRIMARY.MAIN_MENU:
+				if (typeof this.mainMenu === 'undefined') this.mainMenu = new MainMenu();
+				this.mainMenu.Update();
+				if (this.mainMenu.GetPlay()) {
+					this.primaryState = main.GameStates.PRIMARY.PLAYING;
+				}
+				break;
+			case main.GameStates.PRIMARY.PLAYING:
+				if (typeof this.level === 'undefined') this.level = new Level();
+				this.level.Update();
+				break;
+			case main.GameStates.PRIMARY.OUTRO:
+				break;
+		}
+
+		/****	REMOVING for the sake of keeping things simple
+		// Update Secondary State second
+		if (this.secondaryState.length > 0) {
+			for (s = this.secondaryState.length; s >= 0; s--) {
+				switch (this.secondaryState[s]) {
+					case main.GameStates.SECONDARY.GAME_MENU:
+						break;
+					case main.GameStates.SECONDARY.TRANSITION:
+						this.transition.Update();
+						break;
+				}
 			}
 		}
+		*****/
+
 	}
-	*****/
 
 };
 
