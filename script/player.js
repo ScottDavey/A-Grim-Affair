@@ -8,8 +8,8 @@ function Player (level) {
 	this.velocity = new Vector2(0, 0);
 
 	this.movement = 0;
-	this.friction = 0.75;
-	this.moveAcceleration = 3000.0;
+	this.friction = 0.8;
+	this.moveAcceleration = 4000.0;
 	this.maxMoveSpeed = 300.0;
 	this.gravity = 3000.0;
 	this.maxFallSpeed = 1000.0;
@@ -108,13 +108,15 @@ Player.prototype.Jump = function (velY) {
 };
 
 Player.prototype.ApplyPhysics = function () {
-	var elapsed;
+	var elapsed, maxSpeed;
 	elapsed = GameTime.GetElapsed();
+
+	maxSpeed = (Input.Keys.GetKey(Input.Keys.SHIFT)) ? this.maxMoveSpeed * 3 : this.maxMoveSpeed;
 
 	// Horizontal Movement
 	this.velocity.x += this.movement * this.moveAcceleration * elapsed;
 	this.velocity.x *= this.friction;
-	this.velocity.x = Clamp(this.velocity.x, -this.MaxMoveSpeed, this.MaxMoveSpeed);
+	this.velocity.x = Clamp(this.velocity.x, -maxSpeed, maxSpeed);
 	this.pos.x += this.velocity.x * elapsed;
 	this.pos.x = Math.round(this.pos.x);
 

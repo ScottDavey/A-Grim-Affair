@@ -15,7 +15,6 @@ function Game () {
 
 Game.prototype.Initialize = function () {
 	this.primaryState = main.GameStates.PRIMARY.INTRO;
-	// this.primaryState = main.GameStates.PRIMARY.MAIN_MENU;
 	this.intro = new Introduction();
 };
 
