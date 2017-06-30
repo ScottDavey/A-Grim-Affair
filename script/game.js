@@ -10,18 +10,24 @@ function Game () {
 	this.intro = undefined;
 	this.mainMenu = undefined;
 	this.level = undefined;
+	this.gameMenu = undefined;
+	this.isPaused = false;
+	this.isEscapeLocked = false;
+	this.escapeLockStart = 0;
 
 }
 
 Game.prototype.Initialize = function () {
 	this.primaryState = main.GameStates.PRIMARY.INTRO;
+	// this.primaryState = main.GameStates.PRIMARY.MAIN_MENU;
 	this.intro = new Introduction();
 };
 
 Game.prototype.Update = function () {
-	var s;
+	var s, currentGameTime;
 
 	GameTime.Update();
+	currentGameTime = GameTime.GetCurrentGameTime();
 	this.fps = fps.getFPS();
 	if (main.hasGamePad) Input.GamePad.Update();
 
@@ -34,15 +40,18 @@ Game.prototype.Update = function () {
 	**
 	*/
 
+	// When we switch tabs the frame rate drops enough for the collision to stop working. We'll pause the game until the framerate comes back up
 	if (this.fps > 30) {
 
 		// Update Primary State first
 		switch (this.primaryState) {
 			case main.GameStates.PRIMARY.INTRO:
+				if (typeof this.intro === 'undefined') this.intro = new Introduction();
 				this.intro.Update();
 				// When the intro is finished, switch to main menu
 				if (this.intro.GetDone()) {
 					this.primaryState = main.GameStates.PRIMARY.MAIN_MENU;
+					this.intro = undefined;
 				}
 				break;
 			case main.GameStates.PRIMARY.MAIN_MENU:
@@ -50,11 +59,33 @@ Game.prototype.Update = function () {
 				this.mainMenu.Update();
 				if (this.mainMenu.GetPlay()) {
 					this.primaryState = main.GameStates.PRIMARY.PLAYING;
+					this.mainMenu = undefined;
 				}
 				break;
 			case main.GameStates.PRIMARY.PLAYING:
-				if (typeof this.level === 'undefined') this.level = new Level();
-				this.level.Update();
+
+				// Remove locks after 0.5 seconds
+				if (this.isEscapeLocked && (currentGameTime - this.escapeLockStart) >= 0.5) this.isEscapeLocked = false;
+
+				if (!this.isEscapeLocked && Input.Keys.GetKey(Input.Keys.ESCAPE)) {
+					this.isPaused = (this.isPaused) ? false : true;
+					this.isEscapeLocked = true;
+					this.escapeLockStart = currentGameTime;
+				}
+
+				if (this.isPaused) {
+					if (typeof this.gameMenu === 'undefined') this.gameMenu = new GameMenu();
+					this.gameMenu.Update();
+					if (this.gameMenu.QuitMainMenu() || this.gameMenu.QuitIntro()) {
+						this.primaryState = (this.gameMenu.QuitMainMenu()) ? main.GameStates.PRIMARY.MAIN_MENU : main.GameStates.PRIMARY.INTRO;
+						this.isPaused = false;
+						this.gameMenu = undefined;
+						this.level = undefined;
+					}
+				} else {
+					if (typeof this.level === 'undefined') this.level = new Level();
+					this.level.Update();
+				}
 				break;
 			case main.GameStates.PRIMARY.OUTRO:
 				break;
@@ -96,12 +127,19 @@ Game.prototype.Draw = function () {
 			break;
 		case main.GameStates.PRIMARY.PLAYING:
 			if (typeof this.level !== 'undefined') this.level.Draw();
+			
+			if (this.isPaused) {
+				if (typeof this.gameMenu !== 'undefined') this.gameMenu.Draw();
+			}
+
 			DrawText('Primary State: PLAYING', 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 			break;
 		case main.GameStates.PRIMARY.OUTRO:
 			DrawText('Primary State: OUTRO', 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 			break;
 	}
+
+	DrawText('Paused: ' + this.isPaused, (main.CANVAS_WIDTH - 200), (main.CANVAS_HEIGHT - 20), 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 
 	/****	REMOVING for the sake of keeping things simple
 	// Update Secondary State second

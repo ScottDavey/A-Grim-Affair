@@ -44,8 +44,8 @@ Introduction.prototype.Update = function () {
 	// Apply opacity change
 	this.fade.SetColor('rgba(0, 0, 0, ' + this.fadeOpacity + ')');
 
-	// If we've hit our duration, scene is over. Move on to the intro
-	if (!this.done && elapsedTime >= this.duration) {
+	// If we've hit our duration, scene is over OR if the user hits ESCAPE. Move on to the intro
+	if (!this.done && elapsedTime >= this.duration || Input.Keys.GetKey(Input.Keys.ESCAPE)) {
 		this.done = true;
 	}
 };
