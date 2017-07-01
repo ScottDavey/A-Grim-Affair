@@ -3,7 +3,7 @@
 <head>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway" />
 	<style type="text/css">
-		* { padding: 0px; margin: 0px auto; }
+		* { padding: 0; margin: 0 auto; }
 		html, body { background-color: #000000; font:normal 11pt Raleway, "Century Gothic", Verdana, Arial; color: #DCDCDC; }
 
 		h1 { font:normal 60pt Raleway, "Century Gothic", Verdana, Arial; color:#DCDCDC; text-align: center; }
@@ -12,6 +12,7 @@
 		a:hover { color:#14FFEC; }
 
 		#wrapper { margin-top:100px; }
+		#GamePad { margin-top:10px; }
 	</style>
 
 	<!-- COLLISION MAPS -->
@@ -27,6 +28,7 @@
 	<script type="text/javascript" language="javascript" src="script/transition.js"></script>
 	<script type="text/javascript" language="javascript" src="script/introduction.js"></script>
 	<script type="text/javascript" language="javascript" src="script/mainmenu.js"></script>
+	<script type="text/javascript" language="javascript" src="script/soulfire.js"></script>
 	<script type="text/javascript" language="javascript" src="script/player.js"></script>
 	<script type="text/javascript" language="javascript" src="script/camera.js"></script>
 	<script type="text/javascript" language="javascript" src="script/scene_one.js"></script>
@@ -40,6 +42,7 @@
 	<div id="wrapper">
 		<canvas id="viewport"></canvas>
 	</div>
+	<div id="GamePad"><img src="images/GamePad_Disconnected.png" alt="GamePad is Disconnected" /></div>
 
 </body>
 </html>

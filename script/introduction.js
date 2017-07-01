@@ -45,7 +45,7 @@ Introduction.prototype.Update = function () {
 	this.fade.SetColor('rgba(0, 0, 0, ' + this.fadeOpacity + ')');
 
 	// If we've hit our duration, scene is over OR if the user hits ESCAPE. Move on to the intro
-	if (!this.done && elapsedTime >= this.duration || Input.Keys.GetKey(Input.Keys.ESCAPE)) {
+	if (!this.done && elapsedTime >= this.duration || Input.Keys.GetKey(Input.Keys.ESCAPE) || Input.GamePad.A.pressed) {
 		this.done = true;
 	}
 };

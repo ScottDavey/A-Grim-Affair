@@ -4,7 +4,8 @@
 function Player (level) {
 	this.level = level;
 	this.pos = new Vector2(20, 100);
-	this.size = new Vector2(25, 50);
+	this.size = new Vector2(30, 75);
+	this.dir = 1;
 	this.velocity = new Vector2(0, 0);
 
 	this.movement = 0;
@@ -21,6 +22,10 @@ function Player (level) {
 	this.maxJumpTime = 0.10;
 	this.jumpTime = 0;
 
+	// Shooting
+	this.isShootLocked = false;
+	this.shoots = [];
+
 	// Sprite
 	this.player = new Texture(this.pos, this.size, 'rgb(255, 255, 255)', 1, 'rgb(255, 255, 255)');
 
@@ -32,14 +37,73 @@ Player.prototype.SetPos = function (pos) {
 
 Player.prototype.GetInput = function () {
 
-	// Horizontal Movement
-	if (Input.Keys.GetKey(Input.Keys.A) || Input.Keys.GetKey(Input.Keys.LEFT) || Input.GamePad.LEFT.pressed) {
-		this.movement = -1.0;
-	} else if (Input.Keys.GetKey(Input.Keys.D) || Input.Keys.GetKey(Input.Keys.RIGHT) || Input.GamePad.RIGHT.pressed) {
-		this.movement = 1.0;
+	// Horizontal Movement (Either keyboard WASD/Arrows |OR| Game Pad D-Pad |OR| Game Pad Sticks)
+	if (Input.Keys.GetKey(Input.Keys.A) || Input.Keys.GetKey(Input.Keys.LEFT) || Input.GamePad.LEFT.pressed || Input.GamePad.AXES.HORIZONTAL < 0) {
+		this.movement = (Input.GamePad.AXES.HORIZONTAL < 0) ? Input.GamePad.AXES.HORIZONTAL : -1.0;
+		this.dir = -1;
+	} else if (Input.Keys.GetKey(Input.Keys.D) || Input.Keys.GetKey(Input.Keys.RIGHT) || Input.GamePad.RIGHT.pressed || Input.GamePad.AXES.HORIZONTAL > 0) {
+		this.movement = (Input.GamePad.AXES.HORIZONTAL > 0) ? Input.GamePad.AXES.HORIZONTAL : 1.0;
+		this.dir = 1;
 	}
 
 	this.isJumping = (Input.Keys.GetKey(Input.Keys.SPACE) || Input.GamePad.A.pressed);
+
+	// Shoot (only shoot once per button press)
+	if (Input.Keys.GetKey(Input.Keys.R) || Input.GamePad.X.pressed) {
+		if (!this.isShootLocked) {
+			this.Shoot();
+			this.isShootLocked = true;
+		}
+	} else {
+		this.isShootLocked = false;
+	}
+
+};
+
+Player.prototype.Shoot = function () {
+	var x, y, pos;
+	x = (this.dir === 1) ? this.pos.x + this.size.x : this.pos.x;
+	y = this.pos.y + (this.size.y / 2);
+	pos = new Vector2(x, y);
+	this.shoots.push(new SoulFire(this.dir, pos));
+};
+
+Player.prototype.HasShotCollided = function (shot) {
+	var pos, size, bounds, slope, b, y, l, line, hasCollided, xDiff;
+	// innocent until proven guilty
+	hasCollided = false;
+	// Get some info about this shot
+	pos = shot.GetPos();
+	size = shot.GetSize();
+	// Set this shot's bounding box
+	bounds = new Rectangle(pos.x, pos.y, size.x, size.y);
+	// Loop through all lines to see if it's collided
+	for (l = 0; l < this.level.lines.length; l++) {
+		line = this.level.lines[l];
+
+		if ((line.collision == 'FLOOR' || line.collision == 'CEILING') && bounds.center.x >= line.startPos.x && bounds.center.x <= line.endPos.x) {
+
+			slope = (line.endPos.y - line.startPos.y) / (line.endPos.x - line.startPos.x);
+			b = line.startPos.y - (slope * line.startPos.x);
+			yc = (slope * bounds.center.x) + b;
+
+			if (Math.abs(yc - bounds.center.y) <= bounds.halfSize.y) {
+				hasCollided = true;
+			}
+
+		} else if (line.collision == 'WALL' && bounds.center.y > line.startPos.y && bounds.center.y < line.endPos.y) {
+
+			xDiff = Math.abs(bounds.center.x - line.startPos.x);
+
+			if (xDiff <= bounds.halfSize.x) {
+				hasCollided = true;
+			}
+
+		}
+
+	}
+
+	return hasCollided;
 
 };
 
@@ -108,15 +172,13 @@ Player.prototype.Jump = function (velY) {
 };
 
 Player.prototype.ApplyPhysics = function () {
-	var elapsed, maxSpeed;
+	var elapsed;
 	elapsed = GameTime.GetElapsed();
-
-	maxSpeed = (Input.Keys.GetKey(Input.Keys.SHIFT)) ? this.maxMoveSpeed * 3 : this.maxMoveSpeed;
 
 	// Horizontal Movement
 	this.velocity.x += this.movement * this.moveAcceleration * elapsed;
 	this.velocity.x *= this.friction;
-	this.velocity.x = Clamp(this.velocity.x, -maxSpeed, maxSpeed);
+	this.velocity.x = Clamp(this.velocity.x, -this.maxMoveSpeed, this.maxMoveSpeed);
 	this.pos.x += this.velocity.x * elapsed;
 	this.pos.x = Math.round(this.pos.x);
 
@@ -131,9 +193,21 @@ Player.prototype.ApplyPhysics = function () {
 };
 
 Player.prototype.Update = function () {
+	var s, shot, pos, screenBounds;
 
 	this.GetInput();
 	this.ApplyPhysics();
+
+	// Shoots
+	for (s = 0; s < this.shoots.length; s++) {
+		shot = this.shoots[s];
+		pos = shot.GetPos();
+		if (shot.pos.x > 3000 || shot.pos.x < 0 || this.HasShotCollided(shot)) {
+			this.shoots.splice(s, 1);	// remove
+		} else {
+			shot.Update();
+		}
+	}
 
 	this.movement = 0;
 	this.isJumping = false;
@@ -141,9 +215,18 @@ Player.prototype.Update = function () {
 };
 
 Player.prototype.Draw = function () {
+	var s;
+
 	this.player.Draw();
+
+	// Shoots
+	for (s = 0; s < this.shoots.length; s++) {
+		this.shoots[s].Draw();
+	}
 
 	DrawText('On Ground: ' + this.isOnGround, 20, 660, 'normal 12pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 	DrawText('X: ' + this.pos.x, 20, 680, 'normal 12pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 	DrawText('Y: ' + this.pos.y, 100, 680, 'normal 12pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
+
+	DrawText('SHOOTS: ' + this.shoots.length, 20, 700, 'normal 12pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 };

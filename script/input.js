@@ -58,15 +58,16 @@ var Input = {
 	GamePad: {
 		init: function () {
 			main.GamePad = navigator.getGamepads()[0];
-			console.log(main.GamePad);
 			if (main.GamePad !== null) {
 				main.hasGamePad = true;
+				main.gamePadDiv.childNodes[0].src = 'images/GamePad_Connected.png';
 				console.log('Game Pad is connected');
 			}
 		},
 		deinit: function () {
 			main.GamePad = null;
 			main.hasGamePad = false;
+			main.gamePadDiv.childNodes[0].src = 'images/GamePad_Disconnected.png';
 			console.log('Game Pad has disconnected');
 		},
 		Update: function () {
@@ -78,10 +79,13 @@ var Input = {
 				Input.GamePad.B = main.GamePad.buttons[1];
 				Input.GamePad.X = main.GamePad.buttons[2];
 				Input.GamePad.Y = main.GamePad.buttons[3];
+				Input.GamePad.START = main.GamePad.buttons[9];
 				Input.GamePad.UP = main.GamePad.buttons[12];
 				Input.GamePad.DOWN = main.GamePad.buttons[13];
 				Input.GamePad.LEFT = main.GamePad.buttons[14];
 				Input.GamePad.RIGHT = main.GamePad.buttons[15];
+				Input.GamePad.AXES.HORIZONTAL = parseFloat(main.GamePad.axes[0].toFixed(1));
+				Input.GamePad.AXES.VERTICAL = parseFloat(main.GamePad.axes[1].toFixed(1));
 			}
 		},
 		A: {},
@@ -91,6 +95,11 @@ var Input = {
 		UP: {},
 		DOWN: {},
 		LEFT: {},
-		RIGHT: {}
+		RIGHT: {},
+		START: {},
+		AXES: {
+			VERTICAL: {},
+			HORIZONTAL: {}
+		}
 	}
 };

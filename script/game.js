@@ -67,7 +67,7 @@ Game.prototype.Update = function () {
 				// Remove locks after 0.5 seconds
 				if (this.isEscapeLocked && (currentGameTime - this.escapeLockStart) >= 0.5) this.isEscapeLocked = false;
 
-				if (!this.isEscapeLocked && Input.Keys.GetKey(Input.Keys.ESCAPE)) {
+				if (!this.isEscapeLocked && (Input.Keys.GetKey(Input.Keys.ESCAPE) || Input.GamePad.START.pressed)) {
 					this.isPaused = (this.isPaused) ? false : true;
 					this.isEscapeLocked = true;
 					this.escapeLockStart = currentGameTime;
