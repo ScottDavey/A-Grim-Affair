@@ -9,6 +9,7 @@ function SoulFire (dir, pos) {
 	this.velocity = new Vector2(0, 0);
 	this.acceleration = 20000.0;
 	this.speed = 1500.0;
+	this.dmg = 50;
 	this.sf = new Texture(this.pos, this.size, '#00FF00', 1, '#00FF00');
 }
 
@@ -18,6 +19,10 @@ SoulFire.prototype.GetPos = function () {
 
 SoulFire.prototype.GetSize = function () {
 	return this.size;
+};
+
+SoulFire.prototype.GetDmg = function () {
+	return this.dmg;
 };
 
 SoulFire.prototype.Update = function () {

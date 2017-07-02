@@ -111,7 +111,7 @@ Game.prototype.Update = function () {
 };
 
 Game.prototype.Draw = function () {
-	var s;
+	var s, state;
 	// Clear the screen for re-drawing
 	main.context.clearRect(0, 0, main.CANVAS_WIDTH, main.CANVAS_HEIGHT);
 
@@ -119,27 +119,30 @@ Game.prototype.Draw = function () {
 	switch (this.primaryState) {
 		case main.GameStates.PRIMARY.INTRO:
 			if (typeof this.intro !== 'undefined') this.intro.Draw();
-			DrawText('Primary State: INTRO', 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
+			state = 'INTRO';
 			break;
 		case main.GameStates.PRIMARY.MAIN_MENU:
 			if (typeof this.mainMenu !== 'undefined') this.mainMenu.Draw();
-			DrawText('Primary State: MAIN_MENU', 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
+			state = 'MAIN_MENU';
 			break;
 		case main.GameStates.PRIMARY.PLAYING:
-			if (typeof this.level !== 'undefined') this.level.Draw();
+			if (typeof this.level !== 'undefined') {
+				this.level.Draw();
+				DrawText('Enemy Count: ' + this.level.GetEnemyCount(), 20, 680, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
+			}
 			
 			if (this.isPaused) {
 				if (typeof this.gameMenu !== 'undefined') this.gameMenu.Draw();
 			}
 
-			DrawText('Primary State: PLAYING', 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
+			state = 'PLAYING';
 			break;
 		case main.GameStates.PRIMARY.OUTRO:
-			DrawText('Primary State: OUTRO', 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
+			state = 'OUTRO';
 			break;
 	}
 
-	DrawText('Paused: ' + this.isPaused, (main.CANVAS_WIDTH - 200), (main.CANVAS_HEIGHT - 20), 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
+	DrawText('Primary State: ' + state, 20, 640, 'normal 14pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
 
 	/****	REMOVING for the sake of keeping things simple
 	// Update Secondary State second

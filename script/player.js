@@ -35,6 +35,14 @@ Player.prototype.SetPos = function (pos) {
 	this.pos = pos;
 };
 
+Player.prototype.GetShoots = function () {
+	return this.shoots;
+};
+
+Player.prototype.ShotLanded = function (i) {
+	this.shoots.splice(i, 1);
+};
+
 Player.prototype.GetInput = function () {
 
 	// Horizontal Movement (Either keyboard WASD/Arrows |OR| Game Pad D-Pad |OR| Game Pad Sticks)
@@ -49,7 +57,7 @@ Player.prototype.GetInput = function () {
 	this.isJumping = (Input.Keys.GetKey(Input.Keys.SPACE) || Input.GamePad.A.pressed);
 
 	// Shoot (only shoot once per button press)
-	if (Input.Keys.GetKey(Input.Keys.R) || Input.GamePad.X.pressed) {
+	if (Input.Keys.GetKey(Input.Keys.CONTROL) || Input.GamePad.X.pressed) {
 		if (!this.isShootLocked) {
 			this.Shoot();
 			this.isShootLocked = true;
@@ -69,7 +77,7 @@ Player.prototype.Shoot = function () {
 };
 
 Player.prototype.HasShotCollided = function (shot) {
-	var pos, size, bounds, slope, b, y, l, line, hasCollided, xDiff;
+	var pos, size, bounds, slope, b, yc, l, line, hasCollided, xDiff;
 	// innocent until proven guilty
 	hasCollided = false;
 	// Get some info about this shot
@@ -209,6 +217,11 @@ Player.prototype.Update = function () {
 		}
 	}
 
+	// If player falls through a hole (or collision fails), drop them in from the top of screen
+	if (this.pos.y > this.level.WORLD_HEIGHT) {
+		this.pos.y = -100;
+	}
+
 	this.movement = 0;
 	this.isJumping = false;
 
@@ -223,10 +236,5 @@ Player.prototype.Draw = function () {
 	for (s = 0; s < this.shoots.length; s++) {
 		this.shoots[s].Draw();
 	}
-
-	DrawText('On Ground: ' + this.isOnGround, 20, 660, 'normal 12pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
-	DrawText('X: ' + this.pos.x, 20, 680, 'normal 12pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
-	DrawText('Y: ' + this.pos.y, 100, 680, 'normal 12pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
-
-	DrawText('SHOOTS: ' + this.shoots.length, 20, 700, 'normal 12pt Consolas, Trebuchet MS, Verdana', '#FFFFFF');
+	
 };

@@ -8,6 +8,10 @@ function Texture (pos, size, fillColor, lineWidth, lineColor)  {
 	this.lineColor	= lineColor;
 }
 
+Texture.prototype.SetSize = function (size) {
+	this.size = size;
+};
+
 Texture.prototype.SetColor = function (rgba) {
 	this.fillColor	= rgba;
 };

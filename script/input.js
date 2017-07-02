@@ -8,13 +8,14 @@ var Input = {
 		A: 65,
 		S: 83,
 		D: 68,
-		SPACE: 32,
 		R: 82,
 		LEFT: 37,
 		UP: 38,
 		RIGHT: 39,
 		DOWN: 40,
+		SPACE: 32,
 		SHIFT: 16,
+		CONTROL: 17,
 		ESCAPE: 27,
 		GetKey: function (keyCode) {
 			return Input.Keys._isPressed[keyCode];
