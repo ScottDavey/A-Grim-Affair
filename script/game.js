@@ -85,7 +85,7 @@ Game.prototype.Update = function () {
 					} else if (this.gameMenu.Restart()) {
 						this.level = undefined;
 						this.isPaused = false;
-						this.gameMenu = false;
+						this.gameMenu = new GameMenu(this.isPlayerDead);
 						this.primaryState = main.GameStates.PRIMARY.PLAYING;
 					}
 				} else {
