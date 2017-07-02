@@ -3,14 +3,17 @@
 *****  GAME MENU: Displays a menu in-game  *****
 ***********************************************/
 
-function GameMenu () {
-	this.menuPos = new Vector2((main.CANVAS_WIDTH / 2) - 200, (main.CANVAS_HEIGHT / 2) - 100);
-	this.bg = new Texture(this.menuPos, new Vector2(400, 200), 'rgba(0, 0, 0, 1)', 5, '#FFFFFF');
-	this.mainMenuColor = '#FFFFFF';
-	this.quitcolor = '#FFFFFF';
+function GameMenu (isPlayerDead) {
+	this.isPlayerDead = isPlayerDead;
+	this.menuPos = new Vector2((main.CANVAS_WIDTH / 2) - 200, (main.CANVAS_HEIGHT / 2) - 110);
+	this.bg = new Texture(this.menuPos, new Vector2(400, 220), 'rgba(0, 0, 0, 1)', 5, '#FFFFFF');
+	this.mainMenuColor = '#999999';
+	this.restartColor = '#999999';
+	this.quitcolor = '#999999';
 	this.buttons = [
-		['main_menu', new Vector2(this.menuPos.x + 30, this.menuPos.y + 130 - 27), new Vector2(150, 25)],
-		['quit', new Vector2(this.menuPos.x + 30, this.menuPos.y + 160 - 27), new Vector2(50, 25)]
+		['restart', new Vector2(this.menuPos.x + 30, this.menuPos.y + 130 - 27), new Vector2(75, 25)],
+		['main_menu', new Vector2(this.menuPos.x + 30, this.menuPos.y + 160 - 27), new Vector2(150, 25)],
+		['quit', new Vector2(this.menuPos.x + 30, this.menuPos.y + 190 - 27), new Vector2(50, 25)]
 	];
 	this.isLeftClickLocked = false;
 	this.quitMainMenu = false;
@@ -25,13 +28,18 @@ GameMenu.prototype.QuitIntro = function () {
 	return this.quitIntro;
 };
 
+GameMenu.prototype.Restart = function () {
+	return this.restart;
+};
+
 GameMenu.prototype.Update = function () {
-	var mouseMovePos, mouseMoveX, mouseMoveY, b, button;
+	var mouseMovePos, mouseMoveX, mouseMoveY, b, button, hoverColor;
 	mouseMovePos = Input.Mouse.OnMouseMove.GetPosition();
 	mouseMoveX = mouseMovePos.x;
 	mouseMoveY = mouseMovePos.y;
 
 	this.isLeftClickLocked = false;
+	hoverColor = '#0088FF';
 
 	for (b = 0; b < this.buttons.length; b++) {
 		
@@ -44,17 +52,21 @@ GameMenu.prototype.Update = function () {
 			}
 
 			if (button[0] === 'main_menu') {
-				this.mainMenuColor = '#0088FF';
+				this.mainMenuColor = hoverColor;
 				if (this.isLeftClickLocked) this.quitMainMenu = true;
+			} else if (button[0] === 'restart') {
+				this.restartColor = hoverColor;
+				if (this.isLeftClickLocked) this.restart = true;
 			} else if (button[0] === 'quit') {
-				this.quitColor = '#0088FF';
+				this.quitColor = hoverColor;
 				if (this.isLeftClickLocked) this.quitIntro = true;
 			}
 
 			break;
 		} else {
-			this.quitColor = '#FFFFFF';
-			this.mainMenuColor = '#FFFFFF';
+			this.quitColor = '#999999';
+			this.restartColor = '#999999';
+			this.mainMenuColor = '#999999';
 		}
 
 	}
@@ -63,8 +75,12 @@ GameMenu.prototype.Update = function () {
 GameMenu.prototype.Draw = function () {
 
 	this.bg.Draw();
-	DrawText('GAME MENU', this.menuPos.x + 30, this.menuPos.y + 40, 'bold 18pt "Century Gothic", Verdana, Arial', '#990000');
-	DrawText('Main Menu', this.menuPos.x + 30, this.menuPos.y + 130, 'normal 16pt "Century Gothic", Verdana, Arial', this.mainMenuColor);
-	DrawText('Quit', this.menuPos.x + 30, this.menuPos.y + 160, 'normal 16pt "Century Gothic", Verdana, Arial', this.quitColor);
+	DrawText('GAME MENU', this.menuPos.x + 30, this.menuPos.y + 40, 'bold 20pt "Century Gothic", Verdana, Arial', '#FFFFFF');
+	if (this.isPlayerDead) {
+		DrawText('YOU DIED', this.menuPos.x + 30, this.menuPos.y + 90, 'bold 18pt Impact, Verdana, Arial', '#990000');
+	}
+	DrawText('Restart', this.menuPos.x + 30, this.menuPos.y + 130, 'normal 16pt "Century Gothic", Verdana, Arial', this.restartColor);
+	DrawText('Main Menu', this.menuPos.x + 30, this.menuPos.y + 160, 'normal 16pt "Century Gothic", Verdana, Arial', this.mainMenuColor);
+	DrawText('Quit', this.menuPos.x + 30, this.menuPos.y + 190, 'normal 16pt "Century Gothic", Verdana, Arial', this.quitColor);
 
 };

@@ -9,7 +9,7 @@ function Enemy (level) {
 	this.dir = 1;
 	// Horizontal Movement
 	this.acceleration = 4000.0;
-	this.speed = 100.0;
+	this.speed = 500.0;
 	// Vertical Movement
 	this.gravity = 3000.0;
 	this.maxFallSpeed = 1000.0;
@@ -25,7 +25,7 @@ function Enemy (level) {
 	this.life = 100;
 	this.lifeMax = 100;
 	this.lifeBar = new Texture(new Vector2(this.pos.x, this.pos.y - 15), new Vector2(30, 5), '#00FF00', 1, '#007700');
-	this.enemy = new Texture(this.pos, this.size, '#AAAAAA', 1, '#FFFFFF');
+	this.enemy = new Texture(this.pos, this.size, '#2979e6', 1, '#123a71');
 	this.isDead = false;
 
 }

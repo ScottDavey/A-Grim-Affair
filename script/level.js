@@ -15,7 +15,7 @@ function Level () {
 
 	this.BG = new Texture(new Vector2(0, 0), new Vector2(main.CANVAS_WIDTH, main.CANVAS_HEIGHT), '#000000', 1, '#000000');
 
-	for (var e = 0; e < 6; e++) {
+	for (var e = 0; e < 10; e++) {
 		this.enemies.push(new Enemy(this));
 	}
 	
@@ -28,6 +28,24 @@ Level.prototype.LoadLines = function () {
 
 	for (l = 0; l < map.length; l++) {
 		this.lines.push(new Line(new Vector2(map[l].sx, map[l].sy), new Vector2(map[l].ex, map[l].ey), map[l].h, map[l].c, map[l].n, map[l].s));
+	}
+
+};
+
+Level.prototype.IsPlayerDead = function () {
+	return this.player.IsDead();
+};
+
+Level.prototype.CheckPlayerCollision = function (enemy) {
+	var playerBounds, enemyBounds, intersect;
+	playerBounds = new Rectangle(this.player.pos.x, this.player.pos.y, this.player.size.x, this.player.size.y);
+	enemyBounds = new Rectangle(enemy.pos.x, enemy.pos.y, enemy.size.x, enemy.size.y);
+
+	intersect = RectangleExtensions.GetIntersectionDepth(playerBounds, enemyBounds);
+
+	// Enemy has run into our player
+	if (!this.player.isInvincible && intersect.x !== 0 && intersect.y !== 0) {
+		this.player.IsHit();
 	}
 
 };
@@ -46,7 +64,7 @@ Level.prototype.CheckEnemyShot = function (enemy, shot) {
 };
 
 Level.prototype.GetEnemyCount = function () {
-	return this.enemies.length + 1;
+	return this.enemies.length;
 };
 
 Level.prototype.Update = function () {
@@ -81,11 +99,12 @@ Level.prototype.Update = function () {
 		// If enemy is dead, remove him. Else, update him
 		if (enemy.IsDead()) {
 			this.enemies.splice(e, 1);
-			this.enemies.push(new Enemy(this));
+			// this.enemies.push(new Enemy(this));
 		} else {
 			enemy.Update();
 		}
 
+		// Check for enemy collision with shoots
 		for (s = 0; s < shoots.length; s++) {
 
 			shot = shoots[s];
@@ -98,6 +117,10 @@ Level.prototype.Update = function () {
 			}
 
 		}
+
+		// Check for enemy collision with player
+		if (this.CheckPlayerCollision(enemy))
+			this.player.IsHit();
 
 	}
 };

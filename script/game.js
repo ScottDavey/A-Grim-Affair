@@ -10,6 +10,7 @@ function Game () {
 	this.intro = undefined;
 	this.mainMenu = undefined;
 	this.level = undefined;
+	this.isPlayerDead = false;
 	this.gameMenu = undefined;
 	this.isPaused = false;
 	this.isEscapeLocked = false;
@@ -74,17 +75,26 @@ Game.prototype.Update = function () {
 				}
 
 				if (this.isPaused) {
-					if (typeof this.gameMenu === 'undefined') this.gameMenu = new GameMenu();
+					if (typeof this.gameMenu === 'undefined') this.gameMenu = new GameMenu(this.isPlayerDead);
 					this.gameMenu.Update();
 					if (this.gameMenu.QuitMainMenu() || this.gameMenu.QuitIntro()) {
 						this.primaryState = (this.gameMenu.QuitMainMenu()) ? main.GameStates.PRIMARY.MAIN_MENU : main.GameStates.PRIMARY.INTRO;
 						this.isPaused = false;
 						this.gameMenu = undefined;
 						this.level = undefined;
+					} else if (this.gameMenu.Restart()) {
+						this.level = undefined;
+						this.isPaused = false;
+						this.gameMenu = false;
+						this.primaryState = main.GameStates.PRIMARY.PLAYING;
 					}
 				} else {
 					if (typeof this.level === 'undefined') this.level = new Level();
 					this.level.Update();
+					if (this.level.IsPlayerDead()) {
+						this.isPaused = true;
+						this.isPlayerDead = true;
+					}
 				}
 				break;
 			case main.GameStates.PRIMARY.OUTRO:

@@ -5,12 +5,12 @@
 function SoulFire (dir, pos) {
 	this.dir = dir;
 	this.pos = pos;
-	this.size = new Vector2(15, 15);
+	this.size = new Vector2(10, 10);
 	this.velocity = new Vector2(0, 0);
 	this.acceleration = 20000.0;
 	this.speed = 1500.0;
 	this.dmg = 50;
-	this.sf = new Texture(this.pos, this.size, '#00FF00', 1, '#00FF00');
+	this.sf = new Texture(this.pos, this.size, '#00FF00', 5, '#009900');
 }
 
 SoulFire.prototype.GetPos = function () {

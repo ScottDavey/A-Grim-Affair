@@ -26,6 +26,14 @@ function Player (level) {
 	this.isShootLocked = false;
 	this.shoots = [];
 
+	// Life
+	this.life = 100;
+	this.lifeMax = 100;
+	this.lifeBar = new Texture(new Vector2(this.pos.x, this.pos.y - 15), new Vector2(30, 5), '#00FF00', 1, '#007700');
+	this.isInvincible = false;
+	this.hitStart = 0;
+	this.isDead = false;
+
 	// Sprite
 	this.player = new Texture(this.pos, this.size, 'rgb(255, 255, 255)', 1, 'rgb(255, 255, 255)');
 
@@ -115,8 +123,28 @@ Player.prototype.HasShotCollided = function (shot) {
 
 };
 
+Player.prototype.IsHit = function () {
+	var newLife;
+
+	newLife = this.life - 25;
+
+	if (newLife > 0) {
+		this.life = newLife;
+		this.lifeBar.SetSize(new Vector2((this.life / this.lifeMax) * 30, 5));
+		this.player.SetColor('rgba(255, 255, 255, 0.2)');
+		this.isInvincible = true;
+		this.hitStart = GameTime.GetCurrentGameTime();
+	} else {
+		this.isDead = true;
+	}
+};
+
+Player.prototype.IsDead = function () {
+	return this.isDead;
+};
+
 Player.prototype.HandleCollision = function () {
-	var bounds, i, line, b, slope, y, xDiff, shouldPlayWalkSound;
+	var bounds, i, line, b, slope, y, xDiff, shouldPlayWalkSound, e, enemy;
 
 	bounds = new Rectangle(this.pos.x, this.pos.y, this.size.x, this.size.y);
 	this.isOnGround = false;
@@ -201,10 +229,20 @@ Player.prototype.ApplyPhysics = function () {
 };
 
 Player.prototype.Update = function () {
-	var s, shot, pos, screenBounds;
+	var s, shot, pos, screenBounds, currentGameTime;
+	currentGameTime = GameTime.GetCurrentGameTime();
 
 	this.GetInput();
 	this.ApplyPhysics();
+
+	// If player was hit, make him invincible for 2 seconds
+	if (this.isInvincible && (currentGameTime - this.hitStart) >= 2) {
+		this.isInvincible = false;
+		this.player.SetColor('rgba(255, 255, 255, 1)');
+	}
+
+	// Update Life Bar
+	this.lifeBar.Update(new Vector2(this.pos.x, this.pos.y - 15));
 
 	// Shoots
 	for (s = 0; s < this.shoots.length; s++) {
@@ -231,6 +269,7 @@ Player.prototype.Draw = function () {
 	var s;
 
 	this.player.Draw();
+	this.lifeBar.Draw();
 
 	// Shoots
 	for (s = 0; s < this.shoots.length; s++) {
