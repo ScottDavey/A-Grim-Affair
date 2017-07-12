@@ -4,8 +4,9 @@
 *********************************/
 
 function MainMenu () {
-	this.BG = new Texture(new Vector2(0, 0), new Vector2(main.CANVAS_WIDTH, main.CANVAS_HEIGHT), '#111111', 1, '#111111');
-	this.playPos = new Vector2(250, (main.CANVAS_HEIGHT / 2) - 20);
+	// this.BG = new Texture(new Vector2(0, 0), new Vector2(main.CANVAS_WIDTH, main.CANVAS_HEIGHT), '#111111', 1, '#111111');
+	this.BG = new Sprite('images/Main_Menu.jpg', new Vector2(0, 0));
+	this.playPos = new Vector2(250, (main.CANVAS_HEIGHT / 2) + 12);
 	this.playColor = '#FFFFFF';
 	this.playBox = new Rectangle(this.playPos.x, this.playPos.y-37, 120, 40);
 	this.isLeftClickLocked = false;
@@ -65,6 +66,6 @@ MainMenu.prototype.Update = function () {
 
 MainMenu.prototype.Draw = function () {
 	this.BG.Draw();
-	DrawText('PLAY', this.playPos.x, this.playPos.y, 'bold 36pt Raleway, "Century Gothic", Verdana, Arial', this.playColor);
+	DrawText('PLAY', this.playPos.x, this.playPos.y, 'normal 36pt "Josefin Sans", sans-serif', this.playColor);
 	if (this.isFadingOut) this.fadeOutTexture.Draw();
 };

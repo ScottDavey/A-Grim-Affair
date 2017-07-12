@@ -4,144 +4,60 @@
 ***********************************/
 
 function Level () {
-	this.WORLD_WIDTH = main.CANVAS_WIDTH * 2;
-	this.WORLD_HEIGHT = main.CANVAS_HEIGHT * 2;
-	this.player = new Player(this);
-	this.enemies = [];
-	this.camera = new Camera();
-
-	this.lines = [];
-	this.LoadLines();
-
-	this.BG = new Texture(new Vector2(0, 0), new Vector2(main.CANVAS_WIDTH, main.CANVAS_HEIGHT), '#000000', 1, '#000000');
-
-	for (var e = 0; e < 10; e++) {
-		this.enemies.push(new Enemy(this));
-	}
+	this.timer = 0;
+	this.state = main.GameStates.LEVEL.HUB;
+	this.hub = new Hub(true);
+	this.selectedLevel = undefined;
+	this.scene = undefined;
 	
 }
 
-Level.prototype.LoadLines = function () {
-	var map, l;
-	// map = levelMap.one;
-	map = levelMap.two;
-
-	for (l = 0; l < map.length; l++) {
-		this.lines.push(new Line(new Vector2(map[l].sx, map[l].sy), new Vector2(map[l].ex, map[l].ey), map[l].h, map[l].c, map[l].n, map[l].s));
-	}
-
-};
-
-Level.prototype.IsPlayerDead = function () {
-	return this.player.IsDead();
-};
-
-Level.prototype.CheckPlayerCollision = function (enemy) {
-	var playerBounds, enemyBounds, intersect;
-	playerBounds = new Rectangle(this.player.pos.x, this.player.pos.y, this.player.size.x, this.player.size.y);
-	enemyBounds = new Rectangle(enemy.pos.x, enemy.pos.y, enemy.size.x, enemy.size.y);
-
-	intersect = RectangleExtensions.GetIntersectionDepth(playerBounds, enemyBounds);
-
-	// Enemy has run into our player
-	if (!this.player.isInvincible && intersect.x !== 0 && intersect.y !== 0) {
-		this.player.IsHit();
-	}
-
-};
-
-Level.prototype.CheckEnemyShot = function (enemy, shot) {
-	var shotCenter, isHit = false;
-
-	shotCenter = new Vector2(shot.pos.x + (shot.size.x / 2), shot.pos.y + (shot.size.y / 2));
-
-	if (shotCenter.x > enemy.pos.x && shotCenter.x < (enemy.pos.x + enemy.size.x) && shotCenter.y > enemy.pos.y && shotCenter.y < (enemy.pos.y + enemy.size.y)) {
-		isHit = true;
-	}
-
-	return isHit;
-
-};
-
-Level.prototype.GetEnemyCount = function () {
-	return this.enemies.length;
+Level.prototype.GetTimer = function () {
+	return Math.floor(this.timer);
 };
 
 Level.prototype.Update = function () {
-	var cameraPosX, cameraPosY, e, enemy, s, shoots, shot;
+	var elapsed, selectedLevel;
+	elapsed = GameTime.GetElapsed();
 
-	this.player.Update();
+	this.timer = this.timer + elapsed;
 
-	// Camera
-	cameraPosX = this.player.pos.x + (this.player.size.x / 2) - (main.CANVAS_WIDTH / 2);
-	cameraPosY = this.player.pos.y + (this.player.size.y / 2) - (main.CANVAS_HEIGHT / 2);
-
-	if (cameraPosX < 0) {
-		cameraPosX = 0;
-	} else if (cameraPosX > (this.WORLD_WIDTH - main.CANVAS_WIDTH)) {
-		cameraPosX = this.WORLD_WIDTH - main.CANVAS_WIDTH;
-	}
-
-	if (cameraPosY < 0) {
-		cameraPosY = 0;
-	} else if (cameraPosY > (this.WORLD_HEIGHT - main.CANVAS_HEIGHT)) {
-		cameraPosY = this.WORLD_HEIGHT - main.CANVAS_HEIGHT;
-	}
-
-	this.camera.moveTo(cameraPosX, cameraPosY);
-
-	shoots = this.player.GetShoots();
-
-	// Enemies
-	for (e = 0; e < this.enemies.length; e++) {
-		enemy = this.enemies[e];
-
-		// If enemy is dead, remove him. Else, update him
-		if (enemy.IsDead()) {
-			this.enemies.splice(e, 1);
-			// this.enemies.push(new Enemy(this));
-		} else {
-			enemy.Update();
-		}
-
-		// Check for enemy collision with shoots
-		for (s = 0; s < shoots.length; s++) {
-
-			shot = shoots[s];
-
-			// Check to see if the enemy has been hit by a bullet
-			if (this.CheckEnemyShot(enemy, shot)) {
-				enemy.Shot(shot.GetDmg());
-				this.player.ShotLanded(s);
-				break;
+	switch (this.state) {
+		case main.GameStates.LEVEL.HUB:
+			if (typeof this.hub === 'undefined') this.hub = new Hub(false);
+			this.hub.Update();
+			this.selectedLevel = this.hub.GetSelectedLevel();
+			if (typeof this.selectedLevel !== 'undefined') {
+				this.hub = undefined;
+				this.state = main.GameStates.LEVEL.SCENE;
 			}
-
-		}
-
-		// Check for enemy collision with player
-		if (this.CheckPlayerCollision(enemy))
-			this.player.IsHit();
-
+			break;
+		case main.GameStates.LEVEL.SCENE:
+			if (typeof this.scene === 'undefined') { this.scene = new Scene(this.selectedLevel); }
+			this.scene.Update();
+			if (this.scene.backToHUB) {
+				this.scene.UnloadContent();
+				this.scene = undefined;
+				this.state = main.GameStates.LEVEL.HUB;
+			}
+			break;
+		case main.GameStates.LEVEL.BOSS:
+			break;
 	}
+
 };
 
 Level.prototype.Draw = function () {
-	var l, e;
 
-	this.camera.begin();
-
-	this.BG.Draw();
-	this.player.Draw();
-
-	// Enemies
-	for (e = 0; e < this.enemies.length; e++) {
-		this.enemies[e].Draw();
+	switch (this.state) {
+		case main.GameStates.LEVEL.HUB:
+			if (typeof this.hub !== 'undefined') this.hub.Draw();
+			break;
+		case main.GameStates.LEVEL.SCENE:
+			if (typeof this.scene !== 'undefined' && this.scene !== null) this.scene.Draw();
+			break;
+		case main.GameStates.LEVEL.BOSS:
+			break;
 	}
-
-	for (l = 0; l < this.lines.length; l++) {
-		this.lines[l].Draw();
-	}
-
-	this.camera.end();
 
 };

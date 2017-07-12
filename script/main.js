@@ -54,6 +54,11 @@ var main = {
 			GAME_MENU: 0,
 			OPTIONS_MENU: 1,
 			TRANSITION: 2
+		},
+		LEVEL: {
+			HUB: 0,
+			SCENE: 1,
+			BOSS: 2
 		}
 	},
 	run: function () {

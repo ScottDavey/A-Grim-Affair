@@ -1,9 +1,9 @@
 /*******************************************
 **************  PLAYER CLASS  **************
 *******************************************/
-function Enemy (scene, start) {
+function Enemy (scene) {
 	this.scene = scene;
-	this.pos = start;
+	this.pos = new Vector2(random(25, 2000), 25);
 	this.size = new Vector2(30, 75);
 	this.velocity = new Vector2(0, 0);
 	this.dir = 1;

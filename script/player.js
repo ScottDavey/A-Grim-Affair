@@ -1,9 +1,9 @@
 /*******************************************
 **************  PLAYER CLASS  **************
 *******************************************/
-function Player (level) {
-	this.level = level;
-	this.pos = new Vector2(20, 100);
+function Player (scene, playerStart) {
+	this.scene = scene;
+	this.pos = playerStart;
 	this.size = new Vector2(30, 75);
 	this.dir = 1;
 	this.velocity = new Vector2(0, 0);
@@ -23,33 +23,60 @@ function Player (level) {
 	this.jumpTime = 0;
 
 	// Shooting
-	this.isShootLocked = false;
-	this.shoots = [];
+	// this.isShootLocked = false;
+	// this.shoots = [];
 
 	// Life
-	this.life = 100;
-	this.lifeMax = 100;
-	this.lifeBar = new Texture(new Vector2(this.pos.x, this.pos.y - 15), new Vector2(30, 5), '#00FF00', 1, '#007700');
-	this.isInvincible = false;
-	this.hitStart = 0;
-	this.isDead = false;
+	// this.life = 100;
+	// this.lifeMax = 100;
+	// this.lifeBar = new Texture(new Vector2(this.pos.x, this.pos.y - 15), new Vector2(30, 5), '#00FF00', 1, '#007700');
+	// this.isInvincible = false;
+	// this.hitStart = 0;
+	// this.isDead = false;
 
 	// Sprite
 	this.player = new Texture(this.pos, this.size, 'rgb(255, 255, 255)', 1, 'rgb(255, 255, 255)');
 
 }
 
+Player.prototype.UnloadContent = function () {
+	this.scene = undefined;
+	this.pos = undefined;
+	this.size = undefined;
+	this.dir = undefined;
+	this.velocity = undefined;
+	this.movement = undefined;
+	this.friction = undefined;
+	this.moveAcceleration = undefined;
+	this.maxMoveSpeed = undefined;
+	this.gravity = undefined;
+	this.maxFallSpeed = undefined;
+	this.jumpBurst = undefined;
+	this.isOnGround = undefined;
+	this.isJumping = undefined;
+	this.wasJumping = undefined;
+	this.maxJumpTime = undefined;
+	this.jumpTime = undefined;
+	this.player = undefined;
+};
+
+Player.prototype.UpdateScene = function (scene) {
+	this.scene = scene;
+};
+
 Player.prototype.SetPos = function (pos) {
 	this.pos = pos;
 };
 
-Player.prototype.GetShoots = function () {
+
+/*Player.prototype.GetShoots = function () {
 	return this.shoots;
 };
 
 Player.prototype.ShotLanded = function (i) {
 	this.shoots.splice(i, 1);
 };
+*/
 
 Player.prototype.GetInput = function () {
 
@@ -65,6 +92,7 @@ Player.prototype.GetInput = function () {
 	this.isJumping = (Input.Keys.GetKey(Input.Keys.SPACE) || Input.GamePad.A.pressed);
 
 	// Shoot (only shoot once per button press)
+	/*
 	if (Input.Keys.GetKey(Input.Keys.CONTROL) || Input.GamePad.X.pressed) {
 		if (!this.isShootLocked) {
 			this.Shoot();
@@ -73,9 +101,11 @@ Player.prototype.GetInput = function () {
 	} else {
 		this.isShootLocked = false;
 	}
+	*/
 
 };
 
+/*
 Player.prototype.Shoot = function () {
 	var x, y, pos;
 	x = (this.dir === 1) ? this.pos.x + this.size.x : this.pos.x;
@@ -94,8 +124,8 @@ Player.prototype.HasShotCollided = function (shot) {
 	// Set this shot's bounding box
 	bounds = new Rectangle(pos.x, pos.y, size.x, size.y);
 	// Loop through all lines to see if it's collided
-	for (l = 0; l < this.level.lines.length; l++) {
-		line = this.level.lines[l];
+	for (l = 0; l < this.scene.lines.length; l++) {
+		line = this.scene.lines[l];
 
 		if ((line.collision == 'FLOOR' || line.collision == 'CEILING') && bounds.center.x >= line.startPos.x && bounds.center.x <= line.endPos.x) {
 
@@ -143,6 +173,8 @@ Player.prototype.IsDead = function () {
 	return this.isDead;
 };
 
+*/
+
 Player.prototype.HandleCollision = function () {
 	var bounds, i, line, b, slope, y, xDiff, shouldPlayWalkSound, e, enemy;
 
@@ -150,9 +182,9 @@ Player.prototype.HandleCollision = function () {
 	this.isOnGround = false;
 
 	// Lines
-	for (i = 0; i < this.level.lines.length; i++) {
+	for (i = 0; i < this.scene.lines.length; i++) {
 
-		line = this.level.lines[i];
+		line = this.scene.lines[i];
 
 		if ((line.collision == 'FLOOR' || line.collision == 'CEILING') && bounds.center.x >= line.startPos.x && bounds.center.x <= line.endPos.x) {
 
@@ -236,13 +268,16 @@ Player.prototype.Update = function () {
 	this.ApplyPhysics();
 
 	// If player was hit, make him invincible for 2 seconds
+	/*
 	if (this.isInvincible && (currentGameTime - this.hitStart) >= 2) {
 		this.isInvincible = false;
 		this.player.SetColor('rgba(255, 255, 255, 1)');
 	}
 
+
 	// Update Life Bar
 	this.lifeBar.Update(new Vector2(this.pos.x, this.pos.y - 15));
+
 
 	// Shoots
 	for (s = 0; s < this.shoots.length; s++) {
@@ -254,9 +289,10 @@ Player.prototype.Update = function () {
 			shot.Update();
 		}
 	}
+	*/
 
 	// If player falls through a hole (or collision fails), drop them in from the top of screen
-	if (this.pos.y > this.level.WORLD_HEIGHT) {
+	if (this.pos.y > this.scene.WORLD_HEIGHT) {
 		this.pos.y = -100;
 	}
 
@@ -269,11 +305,13 @@ Player.prototype.Draw = function () {
 	var s;
 
 	this.player.Draw();
-	this.lifeBar.Draw();
+	// this.lifeBar.Draw();
 
 	// Shoots
+	/*
 	for (s = 0; s < this.shoots.length; s++) {
 		this.shoots[s].Draw();
 	}
+	*/
 	
 };

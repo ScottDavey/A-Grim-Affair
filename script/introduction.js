@@ -6,7 +6,6 @@
 function Introduction () {
 	this.fade = new Texture(new Vector2(0, 0), new Vector2(main.CANVAS_WIDTH, main.CANVAS_HEIGHT), 'rgba(0, 0, 0, 1)', 1, 'rgba(0, 0, 0, 1)');
 	this.fadeOpacity = 1;
-	this.BG = new Sprite('images/Intro-Background.png', new Vector2(0, 0), new Vector2(main.CANVAS_WIDTH, main.CANVAS_HEIGHT));
 	this.duration = 10;
 	this.state = 0;
 	this.startTime = GameTime.GetCurrentGameTime();
@@ -51,6 +50,6 @@ Introduction.prototype.Update = function () {
 };
 
 Introduction.prototype.Draw = function () {
-	this.BG.Draw();
+	DrawText('A Game by Scott Michael Davey', (main.CANVAS_WIDTH / 2) - 330, (main.CANVAS_HEIGHT / 2) + 10, 'normal 36pt "Poiret One", sans-serif', '#FFFFFF');
 	this.fade.Draw();
 };

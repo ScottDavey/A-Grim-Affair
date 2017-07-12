@@ -2,10 +2,12 @@
 *****  TEXTURE CLASS  *****
 **************************/
 function Texture (pos, size, fillColor, lineWidth, lineColor)  {
-	this.pos		= pos;
-	this.size		= size;
-	this.fillColor	= fillColor;
-	this.lineColor	= lineColor;
+	this.pos = pos;
+	this.size = size;
+	this.fillColor = fillColor;
+	this.lineColor = lineColor;
+	this.lineWidth = lineWidth;
+	this.rect = new Rectangle(this.pos.x, this.pos.y, this.size.x, this.size.y);
 }
 
 Texture.prototype.SetSize = function (size) {
@@ -13,7 +15,12 @@ Texture.prototype.SetSize = function (size) {
 };
 
 Texture.prototype.SetColor = function (rgba) {
-	this.fillColor	= rgba;
+	this.fillColor = rgba;
+};
+
+Texture.prototype.SetBorder = function (rgba, size) {
+	this.lineColor = rgba;
+	this.lineWidth = (typeof size === 'undefined') ? this.lineWidth : size;
 };
 
 Texture.prototype.Update = function (pos) {
