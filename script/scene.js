@@ -9,8 +9,7 @@ function Scene (selectedLevel) {
 	this.level = stages[selectedLevel];
 	this.worldWidth = this.level[0];
 	this.worldHeight = this.level[1];
-	// this.playerStart = this.level[2];
-	this.playerStart = new Vector2(50, 50);	// Adding this temporarily because the one above seems to continually update the array value for some reason
+	this.playerStart = new Vector2(this.level[2].x, this.level[2].y);
 	this.backgroundImgs = this.level[3];
 	this.parallax = undefined;
 	this.collision = this.level[4];

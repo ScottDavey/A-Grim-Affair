@@ -3,7 +3,7 @@
 *******************************************/
 function Enemy (scene, start) {
 	this.scene = scene;
-	this.pos = start;
+	this.pos = new Vector2(start.x, start.y);
 	this.size = new Vector2(30, 75);
 	this.velocity = new Vector2(0, 0);
 	this.dir = 1;
